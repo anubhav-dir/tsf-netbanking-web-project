@@ -48,6 +48,7 @@
         </div>
     </nav>
 
+        <H1>hello</H1>
 
     <?php
     require_once "db/dbconn.php";

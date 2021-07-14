@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,7 +15,6 @@
         #customer-data {
             margin-top: 25px;
         }
-
     </style>
 </head>
 
@@ -30,10 +30,10 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="index.php">Home</a>
+                        <a class="nav-link " aria-current="page" href="index.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="customers.php">Customers</a>
+                        <a class="nav-link active" href="customers.php">Customers</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="transition.php">Transition</a>
@@ -46,42 +46,65 @@
     <!-- History  -->
 
     <?php
-    require_once "db/dbconn.php";
+    if (!isset($_GET['id'])) {
+        header("Location: customers.php");
+    }
     $user_id = $_GET['id'];
-    $sql = "SELECT * FROM `transition records` WHERE sender =:sender OR receiver=:sender";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam('sender', $user_id);
-    $stmt->execute();
-    // $results = $stmt->fetch();
+
+    require_once "db/dbconn.php";
+    require_once "db/transistionDB.php";
+
+    $history = new Transition($pdo);
+    $results = $history->getTransitionHistory($user_id);
     ?>
 
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-12">
                 <div id="customer-data">
-                    <a class="" href="transition.php">send money</a>
-                    <a href="customerDetalis.php?id=<?php echo $user_id; ?>">Profile</a>
+
+                    <h6 class="text-end">
+                        <a href="customerDetalis.php?id=<?php echo $user_id; ?>">Profile</a>
+                    </h6>
+                    <h6 class="text-end">
+                        <a class="" href="transition.php?id=<?php echo $user_id; ?>">send money</a>
+                    </h6>
+                    <?php if (isset($_SESSION['errorMessage'])) {
+                        echo $_SESSION['errorMessage'];
+                        unset($_SESSION['errorMessage']);
+                    } ?>
+
+                    <h1 class="text-center" style="padding-bottom: 25px;"><u> User I'd - <?php echo $user_id;?></u></h1>
+
                     <table class="table">
                         <thead>
                             <tr>
                                 <th>#</th>
                                 <th>Transition I'd</th>
                                 <th>Transition With</th>
-                                <!-- <th>Sender</th> -->
                                 <th>Transition</th>
+                                <th>Re Mark</th>
                                 <th>Date</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php $sn = 0;
-                            while ($sr = $stmt->fetch()) 
-                            {
+                            while ($sr = $results->fetch()) {
                                 $sn++; ?>
                                 <tr>
                                     <td><?php echo $sn; ?></td>
                                     <td><?php echo $sr['transition_id']; ?></td>
-                                    <td><?php if($sr['receiver'] == $user_id){echo $sr['sender'];}else{echo $sr['receiver'];} ?></td>
-                                    <td <?php if($sr['receiver'] == $user_id){echo "class='text-success'";}else{echo 'class="text-danger"';} ?>>₹<?php echo $sr['amount']; ?></td>
+                                    <td><?php if ($sr['receiver'] == $user_id) {
+                                            echo $sr['sender'];
+                                        } else {
+                                            echo $sr['receiver'];
+                                        } ?></td>
+                                    <td <?php if ($sr['receiver'] == $user_id) {
+                                            echo "class='text-success'";
+                                        } else {
+                                            echo 'class="text-danger"';
+                                        } ?>>₹<?php echo $sr['amount']; ?></td>
+                                    <td><?php echo $sr['re_mark']; ?></td>
                                     <td><?php echo $sr['date']; ?></td>
                                 </tr>
                             <?php } ?>

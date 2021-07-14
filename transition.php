@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -46,9 +47,17 @@
 
     <?php
     require_once "db/dbconn.php";
-    $sql = "SELECT * FROM users";
-    $senderId = $pdo->query($sql);
-    $reciverId = $pdo->query($sql);
+    require_once "db/customersDB.php";
+
+    $customers = new Customers($pdo);
+
+    if (isset($_GET['id'])) {
+        $sender = $_GET['id'];
+        $senderId = $customers->getCustomersProfile($sender);
+    } else {
+        $senderId = $customers->getCustomers();
+    }
+    $reciverId = $customers->getCustomers();
 
     // $senderId = $reciverId = $results;
     ?>
@@ -60,15 +69,23 @@
             <div class="col-lg-6">
                 <div id="transition-table">
                     <h1 class="text-center">Send Money</h1>
-                    <form action="transitionDB.php" method="POST">
+                    <?php if (isset($_SESSION['errorMessage'])) {
+                        echo $_SESSION['errorMessage'];
+                        unset($_SESSION['errorMessage']);
+                    } ?>
+                    <form action="db/transitionDao.php" method="POST">
                         <div class="mb-3">
                             <label class="form-label" for="sender">Send From</label>
                             <!-- <input class="form-control" type="text" name="sender" id="sender"> -->
                             <select name="sender" id="sender" class="form-select" aria-label="Default select example">
-                                <option  selected>Send From</option>
-                                <?php while ($r = $senderId->fetch()) { ?>
-                                    <option value="<?php echo $r['user_id']; ?>">(<?php echo $r['user_id']; ?>) <?php echo $r['name']; ?></option>
-                                <?php } ?>
+                                <?php if (isset($_GET['id'])) {  ?>
+                                    <option value="<?php echo $senderId['user_id']; ?>">(<?php echo $senderId['user_id']; ?>) <?php echo $senderId['name']; ?></option>
+                                <?php } else { ?>
+                                    <option selected>Send From</option>
+                                    <?php while ($r = $senderId->fetch()) { ?>
+                                        <option value="<?php echo $r['user_id']; ?>">(<?php echo $r['user_id']; ?>) <?php echo $r['name']; ?></option>
+                                <?php }
+                                } ?>
                             </select>
                         </div>
                         <div class="mb-3">
@@ -76,7 +93,7 @@
                             <!-- <input class="form-control" type="text" name="reciver" id="reciver"> -->
 
                             <select name="receiver" id="receiver" class="form-select" aria-label="Default select example">
-                                <option  selected>Send From</option>
+                                <option selected>Send From</option>
                                 <?php while ($r = $reciverId->fetch()) { ?>
                                     <option value="<?php echo $r['user_id']; ?>">(<?php echo $r['user_id']; ?>) <?php echo $r['name']; ?></option>
                                 <?php } ?>

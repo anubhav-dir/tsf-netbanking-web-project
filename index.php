@@ -36,6 +36,32 @@
         </div>
     </nav>
 
+<?php 
+    require_once "db/dbconn.php";
+    require_once "db/customersDB.php";
+
+    $customers = new Customers($pdo);
+    $results = $customers->getCustomers();
+
+    $totalCustomers = 0;
+    $totalBankAmount = 0;
+    
+    while($r=$results->fetch()){
+        $totalCustomers++;
+        $totalBankAmount += $r['bankAmount'];
+    }
+?>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="text-center" style="padding: 200px 0;">
+                <h4>Total Customers : <?php echo $totalCustomers; ?></h4>
+                <h4>Total Bank Value : ₹<?php echo $totalBankAmount; ?></h4>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

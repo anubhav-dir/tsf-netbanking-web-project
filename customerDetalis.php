@@ -63,11 +63,12 @@
     <?php
     $user_id = $_GET['id'];
     require_once "db/dbconn.php";
-    $sql = "SELECT * FROM users WHERE user_id = :user_id";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam('user_id', $user_id);
-    $stmt->execute();
-    $results = $stmt->fetch();
+
+    require_once "db/customersDB.php";
+
+    $customer = new Customers($pdo);
+    $profile=$customer->getCustomersProfile($user_id);
+   
     ?>
 
     <!-- Details  -->
@@ -76,6 +77,7 @@
             <div class="col-lg-6 ">
                 <div id="customer-data">
                     <h1>Details</h1>
+                    <h6 class="text-end"><a class="" href="transition.php?id=<?php echo $user_id; ?>">send money</a></h6>
                     <table class="table text-center">
                         <thead>
                             <tr>
@@ -86,80 +88,26 @@
                         <tbody>
                             <tr>
                                 <td>User I'd</td>
-                                <td><?php echo $results['user_id']; ?> </td>
+                                <td><?php echo $profile['user_id']; ?> </td>
                             </tr>
                             <tr>
                                 <td>Name</td>
-                                <td><?php echo $results['name']; ?></td>
+                                <td><?php echo $profile['name']; ?></td>
                             </tr>
                             <tr>
                                 <td>Email</td>
-                                <td><?php echo $results['email']; ?></td>
+                                <td><?php echo $profile['email']; ?></td>
                             </tr>
                             <tr>
                                 <td>Contact No</td>
-                                <td><?php echo $results['contactNo']; ?></td>
+                                <td><?php echo $profile['contactNo']; ?></td>
                             </tr>
                             <tr>
                                 <td>Amount</td>
-                                <td>₹<?php echo $results['bankAmount']; ?></td>
+                                <td>₹<?php echo $profile['bankAmount']; ?></td>
                             </tr>
                         </tbody>
                     </table>
-                </div>
-            </div>
-
-            <?php
-            require_once "db/dbconn.php";
-            $user_id = $_GET['id'];
-            $sql = "SELECT * FROM `transition records` WHERE sender =:sender OR receiver=:sender";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindParam('sender', $user_id);
-            $stmt->execute();
-            // $results = $stmt->fetch();
-            ?>
-
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-12">
-                        <div id="customer-data">
-                            <a class="" href="transition.php">send money</a>
-                            <!-- <a href="customerDetalis.php?id=<?php //echo $user_id; ?>">Profile</a> -->
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Transition I'd</th>
-                                        <th>Transition With</th>
-                                        <!-- <th>Sender</th> -->
-                                        <th>Transition</th>
-                                        <th>Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php $sn = 0;
-                                    while ($sr = $stmt->fetch()) {
-                                        $sn++; ?>
-                                        <tr>
-                                            <td><?php echo $sn; ?></td>
-                                            <td><?php echo $sr['transition_id']; ?></td>
-                                            <td><?php if ($sr['receiver'] == $user_id) {
-                                                    echo $sr['sender'];
-                                                } else {
-                                                    echo $sr['receiver'];
-                                                } ?></td>
-                                            <td <?php if ($sr['receiver'] == $user_id) {
-                                                    echo "class='text-success'";
-                                                } else {
-                                                    echo 'class="text-danger"';
-                                                } ?>>₹<?php echo $sr['amount']; ?></td>
-                                            <td><?php echo $sr['date']; ?></td>
-                                        </tr>
-                                    <?php } ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
                 </div>
             </div>
 

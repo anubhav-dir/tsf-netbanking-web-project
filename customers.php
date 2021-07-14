@@ -48,12 +48,12 @@
         </div>
     </nav>
 
-        <H1>hello</H1>
-
     <?php
     require_once "db/dbconn.php";
-    $sql = "SELECT * FROM users";
-    $results = $pdo->query($sql);
+    require_once "db/customersDB.php";
+
+    $customers = new Customers($pdo);
+    $results = $customers->getCustomers();
     ?>
 
     <!-- body section  -->
@@ -73,9 +73,9 @@
                             <th>
                                 Name
                             </th>
-                            <!-- <th>
+                            <th>
                                 Transition History
-                            </th> -->
+                            </th>
                             <th>
                                 Profile
                             </th>
@@ -95,9 +95,9 @@
                                 <td>
                                     <?php echo $r['name']; ?>
                                 </td>
-                                <!-- <td>
-                                    <a href="transitionHistory.php?id=<?php //echo $r['user_id']; ?>">Transition History</a>
-                                </td> -->
+                                <td>
+                                    <a href="transitionHistory.php?id=<?php echo $r['user_id']; ?>">Transition History</a>
+                                </td>
                                 <td>
                                     <a href="customerDetalis.php?id=<?php echo $r['user_id']; ?>">Details</a>
                                 </td>

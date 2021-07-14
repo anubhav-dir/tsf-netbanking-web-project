@@ -1,11 +1,11 @@
 <?php
 
 // localhost
-$dbhost = "localhost";
-$dbname = "tsf-netbanking";
-$dbusername = "root";
-$dbpassword = "";
-$charset = "utf8mb4";
+// $dbhost = "localhost";
+// $dbname = "tsf-netbanking";
+// $dbusername = "root";
+// $dbpassword = "";
+// $charset = "utf8mb4";
 
 // remotehost
 // $dbhost = "remotemysql.com";
@@ -14,12 +14,12 @@ $charset = "utf8mb4";
 // $dbpassword = "mTN6TSVoPS";
 // $charset = "utf8mb4";
 
-// Remotehost
-// $dbhost = "fdb34.awardspace.net";
-// $dbusername = "3894080_netbanking";
-// $dbpassword = "[tFh3Ztd3+?%P+;/";
-// $dbname = "3894080_netbanking";
-// $charset = "utf8mb4";
+// AwardSpace
+$dbhost = "fdb34.awardspace.net";
+$dbusername = "3894080_netbanking";
+$dbpassword = "[tFh3Ztd3+?%P+;/";
+$dbname = "3894080_netbanking";
+$charset = "utf8mb4";
 
 $dns = "mysql:host=$dbhost; dbname=$dbname; charset=$charset";
 

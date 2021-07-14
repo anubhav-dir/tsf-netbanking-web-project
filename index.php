@@ -16,7 +16,7 @@
     <!-- Nav section  -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Navbar</a>
+            <a class="navbar-brand" href="#">TSF-BBS</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -55,6 +55,10 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-6">
+                <div class="text-center">
+                    <h1>The Sparks Foundation</h1>
+                    <h2>Basic Banking System</h2>
+                </div>
                 <div class="text-center" style="padding: 200px 0;">
                 <h4>Total Customers : <?php echo $totalCustomers; ?></h4>
                 <h4>Total Bank Value : ₹<?php echo $totalBankAmount; ?></h4>
